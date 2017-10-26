@@ -19,7 +19,10 @@ class @Gen_context
         when 'string'
           JSON.stringify ast.val
     
-    # ###################################################################################################
+     when "Var"
+      ast.name
+    
+   # ###################################################################################################
     #    stmt
     # ###################################################################################################
     when "Scope"
@@ -27,4 +30,16 @@ class @Gen_context
       for v in ast.list
         t = gen v, ctx
         jl.push t if t != ''
-      jl.join "\n"
+      jl.join ";\n"
+    
+    when "Var_decl"
+      type = switch ast.type.main
+        when "bool"
+          "bool"
+        when "int"
+          "u64"
+        when "float"
+          "f64"
+        when "string"
+          "&str"
+      "let mut #{ast.name}:#{type}"
