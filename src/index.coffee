@@ -127,7 +127,7 @@ class @Gen_context
       for v in ast.list
         t = gen v, ctx
         jl.push t if t != ''
-      jl.join "\n"
+      jl.join ";\n"
     
     when "If"
       cond = gen ast.cond, ctx
@@ -243,10 +243,38 @@ class @Gen_context
       """
     
     when "Throw"
-      "throw new Error(#{gen ast.t, ctx})"
+      "panic!(#{gen ast.t, ctx})"
+      # "throw new Error(#{gen ast.t, ctx})"
     
     when "Var_decl"
       ""
+      
+      # Snippet 1
+      # type = switch ast.type.main
+      #   when "bool"
+      #     "bool"
+      #   when "int"
+      #     "i32"
+      #   when "float"
+      #     "f32"
+      #   when "string"
+      #     "&str"
+      # "let mut #{ast.name}:#{type}"
+      
+      # Snippet 2
+      # recast_hash =
+      #   'bool'  : 'bool'
+      #   'int'   : 'i32'
+      #   'float' : 'f32'
+      #   'array' : 'Vec'
+      # type_recast = (t)->
+      #   t = t.clone()
+      #   t.main = recast_hash[t.main] or t.main
+      #   for field,k in t.nest_list
+      #     t.nest_list[k] = type_recast field
+      #   for k,field in t.field_hash
+      #     t.field_hash[k] = type_recast field
+      #   t
     
     when "Class_decl"
       ctx_nest = ctx.mk_nest()

@@ -536,11 +536,11 @@ describe 'index section', ->
     '''
     return
   # ###################################################################################################
-  it 'throw "err"', ()->
+  it 'panic!("AAAaaaaa!!!!")', ()->
     scope = new ast.Scope
     scope.list.push t = new ast.Throw
-    t.t = cs 'err'
-    assert.equal gen(scope), 'throw new Error("err")'
+    t.t = cs "AAAaaaaa!!!!"
+    assert.equal gen(scope), 'panic!("AAAaaaaa!!!!")'
     return
   
   it 'Fn_decl', ()->
