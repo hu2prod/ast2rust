@@ -76,7 +76,7 @@ class @Gen_context
     #    expr
     # ###################################################################################################
     when "This"
-      "@"
+      "self"
     
     when "Const"
       switch ast.type.main

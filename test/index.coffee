@@ -17,6 +17,12 @@ var_d = (name, scope, _type='int')->
   t.type = type _type
   t
 
+cst = (_type, val)->
+  t = new ast.Const
+  t.val = val
+  t.type = type _type
+  t
+
 ci = (val)->
   t = new ast.Const
   t.val = val
@@ -57,8 +63,8 @@ fa = (target, name, _type)->
   t.type = type _type
   t
 
-describe 'index section', ()->
-  it "var x = 5;", ->
+describe 'index section', ->
+  it "var x = 5; (js)", ->
     decl = new ast.Var_decl
     decl.name = "x"
     decl.type = new Type "int"
@@ -75,6 +81,7 @@ describe 'index section', ()->
     bin_op.op = "ASSIGN"
     bin_op.a = var_x
     bin_op.b = const_5
+    bin_op.type = new Type "int"
 
     scope = new ast.Scope
     scope.list.push decl
@@ -83,20 +90,32 @@ describe 'index section', ()->
     scope.validate()
     p gen scope
 
-  it '@', ()->
-    assert.equal gen(new ast.This), "@"
+  it 'self', ->
+    assert.equal gen(new ast.This), "self"
     return
   
-  it '1', ()->
+  it '1', ->
     scope = new ast.Scope
-    scope.list.push ci('1')
+    scope.list.push cst "int", "1"
     assert.equal gen(scope), "1"
+    return
+  
+  it '1.1', ()->
+    scope = new ast.Scope
+    scope.list.push cst "float", "1.1"
+    assert.equal gen(scope), "1.1"
     return
   
   it '"1"', ()->
     scope = new ast.Scope
-    scope.list.push cs('1')
+    scope.list.push cst "string", "1"
     assert.equal gen(scope), '"1"'
+    return
+  
+  it 'true', ()->
+    scope = new ast.Scope
+    scope.list.push cst "bool", "true"
+    assert.equal gen(scope), "true"
     return
   
   it 'a', ()->
