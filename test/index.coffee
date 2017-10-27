@@ -1,3 +1,4 @@
+require "fy"
 assert = require 'assert'
 
 mod = require '../src/index.coffee'
@@ -57,6 +58,31 @@ fa = (target, name, _type)->
   t
 
 describe 'index section', ()->
+  it "var x = 5;", ->
+    decl = new ast.Var_decl
+    decl.name = "x"
+    decl.type = new Type "int"
+
+    var_x = new ast.Var
+    var_x.name = "x"
+    var_x.type = new Type "int"
+
+    const_5 = new ast.Const
+    const_5.val = "5"
+    const_5.type = new Type "int"
+
+    bin_op = new ast.Bin_op
+    bin_op.op = "ASSIGN"
+    bin_op.a = var_x
+    bin_op.b = const_5
+
+    scope = new ast.Scope
+    scope.list.push decl
+    scope.list.push bin_op
+
+    scope.validate()
+    p gen scope
+
   it '@', ()->
     assert.equal gen(new ast.This), "@"
     return
