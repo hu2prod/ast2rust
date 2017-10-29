@@ -64,6 +64,23 @@ module = @
   MINUS   : (a)->"-(#{a})"
   PLUS    : (a)->"+(#{a})"
 
+recast_hash =
+  'bool'  : 'bool'
+  'int'   : 'i32'
+  'float' : 'f32'
+  'string': '&str'
+  'array' : 'Vec'
+
+type_recast = (t)->
+  t = t.clone()
+  if !t.main = recast_hash[t.main]    # За такий код потрібно яйця відкручувати. Хоч би дужки поставив.
+    throw new Error "Can't recast #{t.main} in Rust"
+  for field,k in t.nest_list
+    t.nest_list[k] = type_recast field
+  for k,field in t.field_hash
+    t.field_hash[k] = type_recast field
+  t
+
 class @Gen_context
   in_class : false
   mk_nest : ()->
@@ -244,37 +261,9 @@ class @Gen_context
     
     when "Throw"
       "panic!(#{gen ast.t, ctx})"
-      # "throw new Error(#{gen ast.t, ctx})"
     
     when "Var_decl"
-      ""
-      
-      # Snippet 1
-      # type = switch ast.type.main
-      #   when "bool"
-      #     "bool"
-      #   when "int"
-      #     "i32"
-      #   when "float"
-      #     "f32"
-      #   when "string"
-      #     "&str"
-      # "let mut #{ast.name}:#{type}"
-      
-      # Snippet 2
-      # recast_hash =
-      #   'bool'  : 'bool'
-      #   'int'   : 'i32'
-      #   'float' : 'f32'
-      #   'array' : 'Vec'
-      # type_recast = (t)->
-      #   t = t.clone()
-      #   t.main = recast_hash[t.main] or t.main
-      #   for field,k in t.nest_list
-      #     t.nest_list[k] = type_recast field
-      #   for k,field in t.field_hash
-      #     t.field_hash[k] = type_recast field
-      #   t
+      "let mut #{ast.name}:#{type_recast ast.type}"
     
     when "Class_decl"
       ctx_nest = ctx.mk_nest()

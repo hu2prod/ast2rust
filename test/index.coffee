@@ -70,34 +70,34 @@ fa = (target, name, _type)->
   t
 
 describe 'index section', ->
-  it "var x = 5; (js)"#, ->
-    # decl = new ast.Var_decl
-    # decl.name = "x"
-    # decl.type = new Type "int"
+  it "var x = 5; (js)", ->
+    decl = new ast.Var_decl
+    decl.name = "x"
+    decl.type = new Type "int"
 
-    # var_x = new ast.Var
-    # var_x.name = "x"
-    # var_x.type = new Type "int"
+    var_x = new ast.Var
+    var_x.name = "x"
+    var_x.type = new Type "int"
 
-    # const_5 = new ast.Const
-    # const_5.val = "5"
-    # const_5.type = new Type "int"
+    const_5 = new ast.Const
+    const_5.val = "5"
+    const_5.type = new Type "int"
 
-    # bin_op = new ast.Bin_op
-    # bin_op.op = "ASSIGN"
-    # bin_op.a = var_x
-    # bin_op.b = const_5
-    # bin_op.type = new Type "int"
+    bin_op = new ast.Bin_op
+    bin_op.op = "ASSIGN"
+    bin_op.a = var_x
+    bin_op.b = const_5
+    bin_op.type = new Type "int"
 
-    # scope = new ast.Scope
-    # scope.list.push decl
-    # scope.list.push bin_op
+    scope = new ast.Scope
+    scope.list.push decl
+    scope.list.push bin_op
 
-    # scope.validate()
-    # assert.equal gen(scope), """
-    #   let mut x:i32;
-    #   (x = 5)
-    # """
+    scope.validate()
+    assert.equal gen(scope), """
+      let mut x:i32;
+      (x = 5)
+    """
 
   it 'self', ->
     assert.equal gen(_var('this', 'int')), "self"
@@ -219,7 +219,8 @@ describe 'index section', ->
   
   it 'f()', ->
     scope = new ast.Scope
-    f = var_d('f', scope)
+    f = new ast.Var
+    f.name = "f"
     scope.list.push t = new ast.Fn_call
     t.fn = f
     assert.equal gen(scope), '(f)()'
@@ -227,7 +228,8 @@ describe 'index section', ->
   
   it 'f(5)', ->
     scope = new ast.Scope
-    f = var_d('f', scope)
+    f = new ast.Var
+    f.name = "f"
     c = cst "int", "5"
     scope.list.push t = new ast.Fn_call
     t.fn = f
@@ -346,7 +348,7 @@ describe 'index section', ->
     # '''
     # return
   # ###################################################################################################
-  it 'loop', ->
+  it 'loop'#, ->
     # scope = new ast.Scope
     # a = cst "int", "1"
     # scope.list.push t = new ast.Loop
