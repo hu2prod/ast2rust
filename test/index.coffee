@@ -164,6 +164,54 @@ describe 'index section', ->
     assert.equal gen(scope), "!(5)"
     return
   
+  it "var a = 5; a++", ->
+    scope = new ast.Scope
+    a = var_d "a", scope
+    c = cst "int", "5"
+    scope.list.push bin(a, "ASSIGN", c)
+    scope.list.push un(a, "RET_INC")
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 5);
+      {let __copy_a = a; a += 1; __copy_a}
+    """
+  
+  it "var a = 5; a--", ->
+    scope = new ast.Scope
+    a = var_d "a", scope
+    c = cst "int", "5"
+    scope.list.push bin(a, "ASSIGN", c)
+    scope.list.push un(a, "RET_DEC")
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 5);
+      {let __copy_a = a; a -= 1; __copy_a}
+    """
+  
+  it "var a = 5; ++a", ->
+    scope = new ast.Scope
+    a = var_d "a", scope
+    c = cst "int", "5"
+    scope.list.push bin(a, "ASSIGN", c)
+    scope.list.push un(a, "INC_RET")
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 5);
+      {a += 1; a}
+    """
+  
+  it "var a = 5; --a", ->
+    scope = new ast.Scope
+    a = var_d "a", scope
+    c = cst "int", "5"
+    scope.list.push bin(a, "ASSIGN", c)
+    scope.list.push un(a, "DEC_RET")
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 5);
+      {a -= 1; a}
+    """
+  
   it '2 + 2', ->
     scope = new ast.Scope
     l = r = cst "int", "2"

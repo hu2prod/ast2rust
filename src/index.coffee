@@ -55,10 +55,10 @@ module = @
   ASS_BOOL_XOR  : (a, b)->"(#{a} = !!(#{a} ^ #{b}))"
   
 @un_op_name_cb_map =
-  INC_RET : (a)->"++(#{a})"
-  RET_INC : (a)->"(#{a})++"
-  DEC_RET : (a)->"--(#{a})"
-  RET_DEC : (a)->"(#{a})--"
+  INC_RET : (a)->"{#{a} += 1; #{a}}"
+  RET_INC : (a)->"{let __copy_#{a} = #{a}; #{a} += 1; __copy_#{a}}"
+  DEC_RET : (a)->"{#{a} -= 1; #{a}}"
+  RET_DEC : (a)->"{let __copy_#{a} = #{a}; #{a} -= 1; __copy_#{a}}"
   BOOL_NOT: (a)->"!(#{a})"
   BIT_NOT : (a)->"!(#{a})"
   MINUS   : (a)->"-(#{a})"
