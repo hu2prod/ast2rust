@@ -17,6 +17,12 @@ var_d = (name, scope, _type='int')->
   t.type = type _type
   t
 
+_var = (name, scope, _type='int')->
+  t = new ast.Var
+  t.name = name
+  t.type = type _type
+  t
+
 cst = (_type, val)->
   t = new ast.Const
   t.val = val
@@ -91,7 +97,7 @@ describe 'index section', ->
     p gen scope
 
   it 'self', ->
-    assert.equal gen(new ast.This), "self"
+    assert.equal gen(_var('this', 'int')), "self"
     return
   
   it '1', ->

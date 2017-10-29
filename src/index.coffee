@@ -75,9 +75,6 @@ class @Gen_context
     # ###################################################################################################
     #    expr
     # ###################################################################################################
-    when "This"
-      "self"
-    
     when "Const"
       switch ast.type.main
         when 'bool', 'int', 'float'
@@ -98,7 +95,10 @@ class @Gen_context
       "{#{jl.join ', '}}"
     
     when "Var"
-      ast.name
+      if ast.name == 'this'
+        'self'
+      else
+        ast.name
     
     when "Bin_op"
       _a = gen ast.a, ctx
