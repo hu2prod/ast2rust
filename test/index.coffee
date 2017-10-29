@@ -150,6 +150,20 @@ describe 'index section', ->
     assert.equal gen(scope), "-(1)"
     return
   
+  it '!true', ->
+    scope = new ast.Scope
+    c = cst "bool", "true"
+    scope.list.push un(c, "BOOL_NOT")
+    assert.equal gen(scope), "!(true)"
+    return
+  
+  it '!5', ->
+    scope = new ast.Scope
+    c = cst "int", "5"
+    scope.list.push un(c, "BIT_NOT")
+    assert.equal gen(scope), "!(5)"
+    return
+  
   it '2 + 2', ->
     scope = new ast.Scope
     l = r = cst "int", "2"

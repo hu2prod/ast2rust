@@ -60,7 +60,7 @@ module = @
   DEC_RET : (a)->"--(#{a})"
   RET_DEC : (a)->"(#{a})--"
   BOOL_NOT: (a)->"!(#{a})"
-  BIT_NOT : (a)->"~(#{a})"
+  BIT_NOT : (a)->"!(#{a})"
   MINUS   : (a)->"-(#{a})"
   PLUS    : (a)->"#{a}.parse::<f32>().unwrap()"
 
