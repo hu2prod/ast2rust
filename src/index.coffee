@@ -62,7 +62,7 @@ module = @
   BOOL_NOT: (a)->"!(#{a})"
   BIT_NOT : (a)->"~(#{a})"
   MINUS   : (a)->"-(#{a})"
-  PLUS    : (a)->"+(#{a})"
+  PLUS    : (a)->"#{a}.parse::<f32>().unwrap()"
 
 recast_hash =
   'bool'  : 'bool'

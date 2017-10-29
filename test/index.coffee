@@ -136,12 +136,12 @@ describe 'index section', ->
     assert.equal gen(scope), "a"
     return
   
-  it '+1'#, ->
-    # scope = new ast.Scope
-    # c = cst "string", "1"
-    # scope.list.push un(c, "PLUS")
-    # assert.throws (-> gen scope), /There is no unary PLUS in Rust./
-    # return
+  it '+"3.14"', ->
+    scope = new ast.Scope
+    c = cst "string", "3.14"
+    scope.list.push un(c, "PLUS")
+    assert.equal gen(scope), '"3.14".parse::<f32>().unwrap()'
+    return
   
   it '-1', ->
     scope = new ast.Scope
