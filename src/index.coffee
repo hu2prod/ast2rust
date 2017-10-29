@@ -64,23 +64,6 @@ module = @
   MINUS   : (a)->"-(#{a})"
   PLUS    : (a)->"+(#{a})"
 
-recast_hash =
-  'bool'  : 'bool'
-  'int'   : 'i32'
-  'float' : 'f32'
-  'string': '&str'
-  'array' : 'Vec'
-
-type_recast = (t)->
-  t = t.clone()
-  if !t.main = recast_hash[t.main]
-    throw new Error "Can't recast #{t.main} in Rust"
-  for field,k in t.nest_list
-    t.nest_list[k] = type_recast field
-  for k,field in t.field_hash
-    t.field_hash[k] = type_recast field
-  t
-
 class @Gen_context
   in_class : false
   mk_nest : ()->
@@ -152,23 +135,20 @@ class @Gen_context
       f = gen ast.f, ctx
       if f == ''
         """
-        if (#{cond}) {
+        if #{cond}
           #{make_tab t, '  '}
-        }
         """
       else if t == ''
         """
-        if (!#{cond}) {
+        unless #{cond}
           #{make_tab f, '  '}
-        }
         """
       else
         """
-        if (#{cond}) {
+        if #{cond}
           #{make_tab t, '  '}
-        } else {
+        else
           #{make_tab f, '  '}
-        }
         """
     
     when "Switch"
@@ -194,16 +174,14 @@ class @Gen_context
     
     when "Loop"
       """
-      while(true) {
+      loop
         #{make_tab gen(ast.scope, ctx), '  '}
-      }
       """
     
     when "While"
       """
-      while(#{gen ast.cond, ctx}) {
+      while #{gen ast.cond, ctx}
         #{make_tab gen(ast.scope, ctx), '  '}
-      }
       """
     
     when "Break"
@@ -269,7 +247,7 @@ class @Gen_context
       # "throw new Error(#{gen ast.t, ctx})"
     
     when "Var_decl"
-      "let mut #{ast.name}:#{type_recast ast.type}"
+      ""
       
       # Snippet 1
       # type = switch ast.type.main

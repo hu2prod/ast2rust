@@ -127,14 +127,14 @@ describe 'index section', ->
   it 'a', ()->
     scope = new ast.Scope
     scope.list.push var_d('a', scope)
-    assert.equal gen(scope), "let mut a:i32;\na"
+    assert.equal gen(scope), "a"
     return
   
   it '+a', ()->
     scope = new ast.Scope
     a = var_d('a', scope)
     scope.list.push un(a,"PLUS")
-    assert.equal gen(scope), "let mut a:i32;\n+(a)"
+    assert.equal gen(scope), "+(a)"
     return
   
   it 'a+b', ()->
@@ -142,11 +142,7 @@ describe 'index section', ->
     a = var_d('a', scope)
     b = var_d('b', scope)
     scope.list.push bin(a,"ADD",b)
-    assert.equal gen(scope), """
-      let mut a:i32;
-      let mut b:i32;
-      (a + b)
-      """
+    assert.equal gen(scope), "(a + b)"
     return
   
   it 'a^b bool', ()->
@@ -154,11 +150,7 @@ describe 'index section', ->
     a = var_d('a', scope)
     b = var_d('b', scope)
     scope.list.push bin(a,"BOOL_XOR",b)
-    assert.equal gen(scope), """
-      let mut a:i32;
-      let mut b:i32;
-      !!(a ^ b)
-      """
+    assert.equal gen(scope), "!!(a ^ b)"
     return
   
   it '[]', ()->
@@ -172,7 +164,7 @@ describe 'index section', ->
     a = var_d('a', scope)
     scope.list.push t = new ast.Array_init
     t.list.push a
-    assert.equal gen(scope), "let mut a:i32;\n[a]"
+    assert.equal gen(scope), "[a]"
     return
   
   it '{}', ()->
@@ -186,7 +178,7 @@ describe 'index section', ->
     a = var_d('a', scope)
     scope.list.push t = new ast.Hash_init
     t.hash.k = a
-    assert.equal gen(scope), 'let mut a:i32;\n{"k": a}'
+    assert.equal gen(scope), '{"k": a}'
     return
   
   it '{}', ()->
@@ -200,7 +192,7 @@ describe 'index section', ->
     a = var_d('a', scope)
     scope.list.push t = new ast.Struct_init
     t.hash.k = a
-    assert.equal gen(scope), 'let mut a:i32;\n{"k": a}'
+    assert.equal gen(scope), '{"k": a}'
     return
   
   it '{k:a}', ()->
@@ -210,7 +202,7 @@ describe 'index section', ->
     t.hash.k = a
     
     scope.list.push fa(t, 'k', 'int')
-    assert.equal gen(scope), 'let mut a:i32;\n({"k": a}).k'
+    assert.equal gen(scope), '({"k": a}).k'
     return
   
   it 'a()', ()->
@@ -218,8 +210,7 @@ describe 'index section', ->
     a = var_d('a', scope)
     scope.list.push t = new ast.Fn_call
     t.fn = a
-    # Прим. пока мы не умеем recast type function
-    assert.equal gen(scope), 'let mut a:i32;\n(a)()'
+    assert.equal gen(scope), '(a)()'
     return
   
   it 'a(b)', ()->
@@ -229,11 +220,7 @@ describe 'index section', ->
     scope.list.push t = new ast.Fn_call
     t.fn = a
     t.arg_list.push b
-    assert.equal gen(scope), """
-      let mut a:i32;
-      let mut b:i32;
-      (a)(b)
-      """
+    assert.equal gen(scope), '(a)(b)'
     return
   # ###################################################################################################
   #    stmt
@@ -246,11 +233,8 @@ describe 'index section', ->
     t.cond = a
     t.t.list.push b
     assert.equal gen(scope), '''
-      let mut a:i32;
-      let mut b:i32;
-      if (a) {
+      if a
         b
-      }
     '''
     return
   
@@ -264,14 +248,10 @@ describe 'index section', ->
     t.t.list.push b
     t.f.list.push c
     assert.equal gen(scope), '''
-      let mut a:i32;
-      let mut b:i32;
-      let mut c:i32;
-      if (a) {
+      if a
         b
-      } else {
+      else
         c
-      }
     '''
     return
   
@@ -283,11 +263,8 @@ describe 'index section', ->
     t.cond = a
     t.f.list.push c
     assert.equal gen(scope), '''
-      let mut a:i32;
-      let mut c:i32;
-      if (!a) {
+      unless a
         c
-      }
     '''
     return
   # ###################################################################################################
@@ -299,8 +276,6 @@ describe 'index section', ->
     t.cond = a
     t.hash["k"] = b
     assert.equal gen(scope), '''
-      let mut a:&str;
-      let mut b:i32;
       switch a
         when "k"
           b
@@ -315,8 +290,6 @@ describe 'index section', ->
     t.hash["k"] = b
     t.hash["k2"] = new ast.Scope
     assert.equal gen(scope), '''
-      let mut a:&str;
-      let mut b:i32;
       switch a
         when "k"
           b
@@ -333,8 +306,6 @@ describe 'index section', ->
     t.cond = a
     t.hash["1"] = b
     assert.equal gen(scope), '''
-      let mut a:i32;
-      let mut b:i32;
       switch a
         when 1
           b
@@ -351,9 +322,6 @@ describe 'index section', ->
     t.hash["1"] = b
     t.f.list.push c
     assert.equal gen(scope), '''
-      let mut a:i32;
-      let mut b:i32;
-      let mut c:i32;
       switch a
         when 1
           b
@@ -368,10 +336,8 @@ describe 'index section', ->
     scope.list.push t = new ast.Loop
     t.scope.list.push a
     assert.equal gen(scope), '''
-      let mut a:i32;
-      while(true) {
+      loop
         a
-      }
     '''
     return
   # ###################################################################################################
@@ -383,11 +349,8 @@ describe 'index section', ->
     t.cond = a
     t.scope.list.push b
     assert.equal gen(scope), '''
-      let mut a:i32;
-      let mut b:i32;
-      while(a) {
+      while a
         b
-      }
     '''
     return
   
@@ -410,8 +373,6 @@ describe 'index section', ->
     t.b = ci '10'
     t.scope.list.push a
     assert.equal gen(scope), '''
-      let mut i:i32;
-      let mut a:i32;
       for i in [1 ... 10]
         a
     '''
@@ -429,8 +390,6 @@ describe 'index section', ->
     t.b = ci '10'
     t.scope.list.push a
     assert.equal gen(scope), '''
-      let mut i:i32;
-      let mut a:i32;
       for i in [1 .. 10]
         a
     '''
@@ -449,8 +408,6 @@ describe 'index section', ->
     t.step = ci '2'
     t.scope.list.push a
     assert.equal gen(scope), '''
-      let mut i:i32;
-      let mut a:i32;
       for i in [1 .. 10] by 2
         a
     '''
@@ -467,9 +424,6 @@ describe 'index section', ->
     t.t = a
     t.scope.list.push b
     assert.equal gen(scope), '''
-      let mut v:i32;
-      let mut a:i32;
-      let mut b:i32;
       for v in a
         b
     '''
@@ -488,10 +442,6 @@ describe 'index section', ->
     t.t = a
     t.scope.list.push b
     assert.equal gen(scope), '''
-      let mut v:i32;
-      let mut k:i32;
-      let mut a:i32;
-      let mut b:i32;
       for v,k in a
         b
     '''
@@ -508,9 +458,6 @@ describe 'index section', ->
     t.t = a
     t.scope.list.push b
     assert.equal gen(scope), '''
-      let mut k:i32;
-      let mut a:i32;
-      let mut b:i32;
       for _skip,k in a
         b
     '''
@@ -527,9 +474,6 @@ describe 'index section', ->
     t.t = a
     t.scope.list.push b
     assert.equal gen(scope), '''
-      let mut v:i32;
-      let mut a:i32;
-      let mut b:i32;
       for _skip,v of a
         b
     '''
@@ -548,10 +492,6 @@ describe 'index section', ->
     t.t = a
     t.scope.list.push b
     assert.equal gen(scope), '''
-      let mut v:i32;
-      let mut k:i32;
-      let mut a:i32;
-      let mut b:i32;
       for k,v of a
         b
     '''
@@ -568,9 +508,6 @@ describe 'index section', ->
     t.t = a
     t.scope.list.push b
     assert.equal gen(scope), '''
-      let mut k:i32;
-      let mut a:i32;
-      let mut b:i32;
       for k of a
         b
     '''
@@ -598,8 +535,6 @@ describe 'index section', ->
     t.c.list.push b
     t.exception_var_name = 'e'
     assert.equal gen(scope), '''
-      let mut a:i32;
-      let mut b:i32;
       try
         a
       catch e
