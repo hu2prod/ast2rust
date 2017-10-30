@@ -412,22 +412,22 @@ describe 'index section', ->
     # t.f.list.push c
     # assert.equal gen(scope), '''
     #   match 0 {
-    #     1 => {b;}
-    #     _ => {c;}
+    #     1 => {2;}
+    #     _ => {3;}
     # '''
     # return
   # ###################################################################################################
-  it 'loop'#, ->
-    # scope = new ast.Scope
-    # a = cst "int", "1"
-    # scope.list.push t = new ast.Loop
-    # t.scope.list.push a
-    # assert.equal gen(scope), '''
-    #   loop {
-    #     1;
-    #   }
-    # '''
-    # return
+  it 'loop', ->
+    scope = new ast.Scope
+    a = cst "int", "1"
+    scope.list.push t = new ast.Loop
+    t.scope.list.push a
+    assert.equal gen(scope), '''
+      loop {
+        1;
+      }
+    '''
+    return
   # ###################################################################################################
   it 'while a {b}'#, ->
     # scope = new ast.Scope

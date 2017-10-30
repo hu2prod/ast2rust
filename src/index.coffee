@@ -194,8 +194,9 @@ class @Gen_context
     
     when "Loop"
       """
-      loop
-        #{make_tab gen(ast.scope, ctx), '  '}
+      loop {
+        #{make_tab gen(ast.scope, ctx), '  '};
+      }
       """
     
     when "While"
