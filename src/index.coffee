@@ -152,20 +152,23 @@ class @Gen_context
       f = gen ast.f, ctx
       if f == ''
         """
-        if #{cond}
-          #{make_tab t, '  '}
+        if #{cond} {
+          #{make_tab t, '  '};
+        }
         """
       else if t == ''
         """
-        unless #{cond}
-          #{make_tab f, '  '}
+        if !(#{cond}) {
+          #{make_tab f, '  '};
+        }
         """
       else
         """
-        if #{cond}
-          #{make_tab t, '  '}
-        else
-          #{make_tab f, '  '}
+        if #{cond} {
+          #{make_tab t, '  '};
+        } else {
+          #{make_tab f, '  '};
+        }
         """
     
     when "Switch"

@@ -219,12 +219,20 @@ describe 'index section', ->
     assert.equal gen(scope), "(2 + 2)"
     return
   
+  it '2 + 2.2', ->
+    scope = new ast.Scope
+    a = cst "int", "2"
+    b = cst "float", "2.2"
+    scope.list.push bin(a, "ADD", b)
+    assert.equal gen(scope), "(2 + 2.2)"
+    return
+  
   it 'true ^ false'#, ->
     # scope = new ast.Scope
     # l = cst "bool", "true"
     # r = cst "bool", "false"
     # scope.list.push bin(l, "BOOL_XOR", r)
-    # assert.equal gen(scope), "(true + false)"
+    # assert.equal gen(scope), "(true ^ false)"
     # return
   
   # it '[]', ->
@@ -302,52 +310,51 @@ describe 'index section', ->
   #    stmt
   # ###################################################################################################
   
-  it 'if true {5;}'#, ->   # Semicolon is important
-    # scope = new ast.Scope
-    # cond = cst "bool", "true"
-    # c = cst "int", "5"
-    # scope.list.push t = new ast.If
-    # t.cond = cond
-    # t.t.list.push c
-    # assert.equal gen(scope), '''
-    #   if true {
-    #     5;
-    #   }
-    # '''
-    # return
+  it 'if true {5;}', ->   # Semicolon is important
+    scope = new ast.Scope
+    cond = cst "bool", "true"
+    c = cst "int", "5"
+    scope.list.push t = new ast.If
+    t.cond = cond
+    t.t.list.push c
+    assert.equal gen(scope), '''
+      if true {
+        5;
+      }
+    '''
+    return
   
-  it 'if true {5;} else {2;}'#, ->
-    # scope = new ast.Scope
-    # cond = cst "bool", "true"
-    # c1 = cst "int", "5"
-    # c2 = cst "int", "2"
-    # scope.list.push t = new ast.If
-    # t.cond = cond
-    # t.t.list.push c1
-    # t.f.list.push c2
-    # assert.equal gen(scope), '''
-    #   if true {
-    #     5;
-    #   }
-    #   else {
-    #     2;
-    #   }
-    # '''
-    # return
+  it 'if true {5;} else {2;}', ->
+    scope = new ast.Scope
+    cond = cst "bool", "true"
+    c1 = cst "int", "5"
+    c2 = cst "int", "2"
+    scope.list.push t = new ast.If
+    t.cond = cond
+    t.t.list.push c1
+    t.f.list.push c2
+    assert.equal gen(scope), '''
+      if true {
+        5;
+      } else {
+        2;
+      }
+    '''
+    return
   
-  it 'if true {} else {2;}'#, ->
-    # scope = new ast.Scope
-    # cond = cst "bool", "true"
-    # c2 = cst "int", "2"
-    # scope.list.push t = new ast.If
-    # t.cond = cond
-    # t.f.list.push c2
-    # assert.equal gen(scope), '''
-    #   if !(true) {
-    #     2;
-    #   }
-    # '''
-    # return
+  it 'if true {} else {2;}', ->
+    scope = new ast.Scope
+    cond = cst "bool", "true"
+    c2 = cst "int", "2"
+    scope.list.push t = new ast.If
+    t.cond = cond
+    t.f.list.push c2
+    assert.equal gen(scope), '''
+      if !(true) {
+        2;
+      }
+    '''
+    return
   
   # ###################################################################################################
   # it 'switch a {k:b}', ()->
