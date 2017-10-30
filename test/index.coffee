@@ -429,19 +429,19 @@ describe 'index section', ->
     '''
     return
   # ###################################################################################################
-  it 'while a {b}'#, ->
-    # scope = new ast.Scope
-    # a = cst "bool", "true"
-    # b = cst "int", "1"
-    # scope.list.push t = new ast.While
-    # t.cond = a
-    # t.scope.list.push b
-    # assert.equal gen(scope), '''
-    #   while a {
-    #     b;
-    #   }
-    # '''
-    # return
+  it 'while', ->
+    scope = new ast.Scope
+    a = cst "bool", "true"
+    b = cst "int", "1"
+    scope.list.push t = new ast.While
+    t.cond = a
+    t.scope.list.push b
+    assert.equal gen(scope), '''
+      while true {
+        1;
+      }
+    '''
+    return
   
   it 'continue', ()->
     assert.equal gen(new ast.Continue), 'continue'

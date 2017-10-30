@@ -201,8 +201,9 @@ class @Gen_context
     
     when "While"
       """
-      while #{gen ast.cond, ctx}
-        #{make_tab gen(ast.scope, ctx), '  '}
+      while #{gen ast.cond, ctx} {
+        #{make_tab gen(ast.scope, ctx), '  '};
+      }
       """
     
     when "Break"
