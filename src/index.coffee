@@ -286,8 +286,17 @@ class @Gen_context
           #{make_tab gen(ast.scope, ctx), '  '}
         """
       else
+        sgnt_list = ast.type.nest_list
+        sgnt_string = "("
+        for t, i in sgnt_list[1..]
+          sgnt_string += ", " if i != 0
+          sgnt_string += "#{arg_list[i]}:#{type_recast t}"
+        sgnt_string += ")"
+        if sgnt_list[0].main != "void"
+          sgnt_string += " -> #{type_recast sgnt_list[0]}"
         """
-        #{ast.name} = (#{arg_list.join ', '})->
+        fn #{ast.name}#{sgnt_string} {
           #{make_tab gen(ast.scope, ctx), '  '}
+        }
         """
     

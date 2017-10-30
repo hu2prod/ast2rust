@@ -645,14 +645,43 @@ describe 'index section', ->
     assert.equal gen(scope), 'panic!("AAAaaaaa!!!!")'
     return
   
-  it 'Fn_decl'#, ->
-    # scope = new ast.Scope
-    # scope.list.push fnd('f', type('function<void>'), [], [])
-    # assert.equal gen(scope), '''
-    #   fn f() {
-    #   }
-    # '''
+  it 'Fn_decl empty', ->
+    scope = new ast.Scope
+    scope.list.push fnd('f', type('function<void>'), [], [])
+    assert.equal gen(scope), "fn f() {\n  \n}"
+  
+  it 'Fn_decl 1 param', ->
+    scope = new ast.Scope
+    scope.list.push fnd('f', type('function<void,int>'), ["a"], [])
+    assert.equal gen(scope), "fn f(a:i32) {\n  \n}"
+  
+  it 'Fn_decl 2 params', ->
+    scope = new ast.Scope
+    scope.list.push fnd('f', type('function<void,float,bool>'), "ab", [])
+    assert.equal gen(scope), "fn f(a:f32, b:bool) {\n  \n}"
     
+  it 'Fn_decl return', ->
+    scope = new ast.Scope
+    ret = new ast.Ret
+    ret.t = ci "1"
+    scope.list.push fnd('f', type('function<int>'), [], [ret])
+    assert.equal gen(scope), '''
+      fn f() -> i32 {
+        return (1)
+      }
+    '''
+  
+  it 'Fn_decl 2 params return', ->
+    scope = new ast.Scope
+    ret = new ast.Ret
+    ret.t = ci "1"
+    scope.list.push fnd('f', type('function<int,float,bool>'), "ab", [ret])
+    assert.equal gen(scope), '''
+      fn f(a:f32, b:bool) -> i32 {
+        return (1)
+      }
+    '''
+  
   # describe 'Class_decl', ()->
   #   it 'Empty', ()->
   #     scope = new ast.Scope
