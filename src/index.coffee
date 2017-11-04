@@ -21,10 +21,6 @@ module = @
   LSR : '>>' # for now
   
   ASSIGN : '='
-  ASS_ADD : '+='
-  ASS_SUB : '-='
-  ASS_MUL : '*='
-  ASS_DIV : '/='
   ASS_MOD : '%='
   ASS_POW : '**='
   
@@ -48,6 +44,11 @@ module = @
   LTE: '<='
 
 @bin_op_name_cb_map =
+  ASS_ADD       : (a, b)-> "{#{a} += #{b}; #{a}}"
+  ASS_SUB       : (a, b)-> "{#{a} -= #{b}; #{a}}"
+  ASS_MUL       : (a, b)-> "{#{a} *= #{b}; #{a}}"
+  ASS_DIV       : (a, b)-> "{#{a} /= #{b}; #{a}}"
+
   ASS_BOOL_AND  : (a, b)->"(#{a} = !!(#{a} & #{b}))"
   ASS_BOOL_OR   : (a, b)->"(#{a} = !!(#{a} | #{b}))"
   ASS_BOOL_XOR  : (a, b)->"(#{a} = !!(#{a} ^ #{b}))"

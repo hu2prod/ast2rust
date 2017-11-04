@@ -212,6 +212,7 @@ describe 'index section', ->
       {a -= 1; a}
     """
   
+  # TODO refactoring
   it '2 + 2', ->
     scope = new ast.Scope
     l = r = cst "int", "2"
@@ -400,6 +401,39 @@ describe 'index section', ->
     scope.list.push bin(l, "LSR", r)
     assert.equal gen(scope), "(17 >> 3)" # This is wrong but makes the difference only for negative numbers
     return
+  
+  it "var a = 5; a += 1", ->
+    scope = new ast.Scope
+    a = var_d "a", scope
+    b = cst "int", "5"
+    c = cst "int", "1"
+    scope.list.push bin(a, "ASSIGN", b)
+    scope.list.push bin(a, "ASS_ADD", c)
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 5);
+      {a += 1; a}
+    """
+  
+  it "var a = 5; a -= 2.5", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "float"
+    b = cst "int", "5"
+    c = cst "float", "2.5"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "float"
+    scope.list.push op
+    
+    op = bin(a, "ASS_SUB", c)
+    op.type = new Type "float"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:f32;
+      (a = 5 as f32);
+      {a -= 2.5; a}
+    """
   
   # it '[]', ->
   #   scope = new ast.Scope
