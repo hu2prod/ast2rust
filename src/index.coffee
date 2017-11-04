@@ -21,7 +21,6 @@ module = @
   LSR : '>>' # for now
   
   ASSIGN : '='
-  ASS_POW : '**='
   
   ASS_SHR : '>>='
   ASS_SHL : '<<='
@@ -69,6 +68,8 @@ module = @
   else
     throw new Error "Invalid exponent type for POW: #{tb}"
 
+@ass_pow = (a, b, ta, tb) ->
+  "{#{a} = #{module.pow a, b, ta, tb}; a}"
 
 @un_op_name_cb_map =
   INC_RET : (a)->"{#{a} += 1; #{a}}"
@@ -140,6 +141,8 @@ class @Gen_context
       tb = ast.b.type?.main
       if ast.op == "POW"
         return module.pow _a, _b, ta, tb
+      if ast.op == "ASS_POW"
+        return module.ass_pow _a, _b, ta, tb
       if ast.type?.main == "float"
         if ta == "int"
           _a += " as f32"
