@@ -377,6 +377,30 @@ describe 'index section', ->
     assert.equal gen(scope), "(5 ^ 7)"
     return
   
+  it '17 >> 3', ->
+    scope = new ast.Scope
+    l = cst "int", "17"
+    r = cst "int", "3"
+    scope.list.push bin(l, "SHR", r)
+    assert.equal gen(scope), "(17 >> 3)"
+    return
+  
+  it '17 << 3', ->
+    scope = new ast.Scope
+    l = cst "int", "17"
+    r = cst "int", "3"
+    scope.list.push bin(l, "SHL", r)
+    assert.equal gen(scope), "(17 << 3)"
+    return
+  
+  it '17 >>> 3', ->
+    scope = new ast.Scope
+    l = cst "int", "17"
+    r = cst "int", "3"
+    scope.list.push bin(l, "LSR", r)
+    assert.equal gen(scope), "(17 >> 3)" # This is wrong but makes the difference only for negative numbers
+    return
+  
   # it '[]', ->
   #   scope = new ast.Scope
   #   scope.list.push t = new ast.Array_init

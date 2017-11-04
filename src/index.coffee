@@ -18,7 +18,7 @@ module = @
   
   SHR : '>>'
   SHL : '<<'
-  LSR : '>>>' # логический сдвиг вправо >>>
+  LSR : '>>' # for now
   
   ASSIGN : '='
   ASS_ADD : '+='
