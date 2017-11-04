@@ -435,6 +435,66 @@ describe 'index section', ->
       {a -= 2.5; a}
     """
   
+  it "var a = 5.5; a *= 2", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "float"
+    b = cst "float", "5.5"
+    c = cst "int", "2"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "float"
+    scope.list.push op
+    
+    op = bin(a, "ASS_MUL", c)
+    op.type = new Type "float"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:f32;
+      (a = 5.5);
+      {a *= 2 as f32; a}
+    """
+  
+  it "var a = 5; a /= 2", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "float"
+    b = cst "int", "5"
+    c = cst "int", "2"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "float"
+    scope.list.push op
+    
+    op = bin(a, "ASS_DIV", c)
+    op.type = new Type "float"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:f32;
+      (a = 5 as f32);
+      {a /= 2 as f32; a}
+    """
+  
+  it "var a = 5; a %= 3", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "int"
+    b = cst "int", "5"
+    c = cst "int", "3"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    op = bin(a, "ASS_MOD", c)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 5);
+      {a %= 3; a}
+    """
+  
   # it '[]', ->
   #   scope = new ast.Scope
   #   scope.list.push t = new ast.Array_init

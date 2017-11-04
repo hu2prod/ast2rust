@@ -21,7 +21,6 @@ module = @
   LSR : '>>' # for now
   
   ASSIGN : '='
-  ASS_MOD : '%='
   ASS_POW : '**='
   
   ASS_SHR : '>>='
@@ -48,6 +47,7 @@ module = @
   ASS_SUB       : (a, b)-> "{#{a} -= #{b}; #{a}}"
   ASS_MUL       : (a, b)-> "{#{a} *= #{b}; #{a}}"
   ASS_DIV       : (a, b)-> "{#{a} /= #{b}; #{a}}"
+  ASS_MOD       : (a, b)-> "{#{a} %= #{b}; #{a}}"
 
   ASS_BOOL_AND  : (a, b)->"(#{a} = !!(#{a} & #{b}))"
   ASS_BOOL_OR   : (a, b)->"(#{a} = !!(#{a} | #{b}))"
