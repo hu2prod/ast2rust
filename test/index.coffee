@@ -219,23 +219,53 @@ describe 'index section', ->
     assert.equal gen(scope), "(2 + 2)"
     return
   
-  it '2 + 2.2', ->
+  it '2 - 2.2', ->
     scope = new ast.Scope
     a = cst "int", "2"
     b = cst "float", "2.2"
-    op = bin(a, "ADD", b)
+    op = bin(a, "SUB", b)
     op.type = new Type "float"
     scope.list.push op
-    assert.equal gen(scope), "(2 as f32 + 2.2)"
+    assert.equal gen(scope), "(2 as f32 - 2.2)"
     return
   
-  it 'true ^ false'#, ->
-    # scope = new ast.Scope
-    # l = cst "bool", "true"
-    # r = cst "bool", "false"
-    # scope.list.push bin(l, "BOOL_XOR", r)
-    # assert.equal gen(scope), "(true ^ false)"
-    # return
+  it '2.2 * 2', ->
+    scope = new ast.Scope
+    a = cst "float", "2.2"
+    b = cst "int", "2"
+    op = bin(a, "MUL", b)
+    op.type = new Type "float"
+    scope.list.push op
+    assert.equal gen(scope), "(2.2 * 2 as f32)"
+    return
+  
+  it '5 / 2', ->
+    scope = new ast.Scope
+    a = cst "int", "5"
+    b = cst "int", "2"
+    op = bin(a, "DIV", b)
+    op.type = new Type "float"
+    scope.list.push op
+    assert.equal gen(scope), "(5 as f32 / 2 as f32)"
+    return
+  
+  it '5 % 3', ->
+    scope = new ast.Scope
+    a = cst "int", "5"
+    b = cst "int", "3"
+    op = bin(a, "MOD", b)
+    op.type = new Type "int"
+    scope.list.push op
+    assert.equal gen(scope), "(5 % 3)"
+    return
+  
+  it 'true ^ false', ->
+    scope = new ast.Scope
+    l = cst "bool", "true"
+    r = cst "bool", "false"
+    scope.list.push bin(l, "BOOL_XOR", r)
+    assert.equal gen(scope), "(true ^ false)"
+    return
   
   # it '[]', ->
   #   scope = new ast.Scope
