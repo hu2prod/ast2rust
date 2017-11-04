@@ -12,8 +12,8 @@ module = @
   BIT_OR  : '|'
   BIT_XOR : '^'
   
-  BOOL_AND : '&&'
-  BOOL_OR  : '||'
+  BOOL_AND : '&'
+  BOOL_OR  : '|'
   BOOL_XOR : '^'
   
   SHR : '>>'

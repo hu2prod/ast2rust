@@ -329,12 +329,52 @@ describe 'index section', ->
     assert.throws(-> gen scope)
     return
   
+  it 'true & false', ->
+    scope = new ast.Scope
+    l = cst "bool", "true"
+    r = cst "bool", "false"
+    scope.list.push bin(l, "BOOL_AND", r)
+    assert.equal gen(scope), "(true & false)"
+    return
+  
+  it 'true | false', ->
+    scope = new ast.Scope
+    l = cst "bool", "true"
+    r = cst "bool", "false"
+    scope.list.push bin(l, "BOOL_OR", r)
+    assert.equal gen(scope), "(true | false)"
+    return
+  
   it 'true ^ false', ->
     scope = new ast.Scope
     l = cst "bool", "true"
     r = cst "bool", "false"
     scope.list.push bin(l, "BOOL_XOR", r)
     assert.equal gen(scope), "(true ^ false)"
+    return
+  
+  it '5 & 7', ->
+    scope = new ast.Scope
+    l = cst "int", "5"
+    r = cst "int", "7"
+    scope.list.push bin(l, "BIT_AND", r)
+    assert.equal gen(scope), "(5 & 7)"
+    return
+  
+  it '5 | 7', ->
+    scope = new ast.Scope
+    l = cst "int", "5"
+    r = cst "int", "7"
+    scope.list.push bin(l, "BIT_OR", r)
+    assert.equal gen(scope), "(5 | 7)"
+    return
+  
+  it '5 ^ 7', ->
+    scope = new ast.Scope
+    l = cst "int", "5"
+    r = cst "int", "7"
+    scope.list.push bin(l, "BIT_XOR", r)
+    assert.equal gen(scope), "(5 ^ 7)"
     return
   
   # it '[]', ->
