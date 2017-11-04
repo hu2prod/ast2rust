@@ -259,6 +259,76 @@ describe 'index section', ->
     assert.equal gen(scope), "(5 % 3)"
     return
   
+  it '5 ** 2', ->
+    scope = new ast.Scope
+    a = cst "int", "5"
+    b = cst "int", "2"
+    op = bin(a, "POW", b)
+    op.type = new Type "int"
+    scope.list.push op
+    assert.equal gen(scope), "(5 as i32).pow(2 as u32)"
+    return
+  
+  it '5.5 ** 2', ->
+    scope = new ast.Scope
+    a = cst "float", "5.5"
+    b = cst "int", "2"
+    op = bin(a, "POW", b)
+    op.type = new Type "float"
+    scope.list.push op
+    assert.equal gen(scope), "(5.5 as f32).powi(2)"
+    return
+  
+  it '5 ** 2.5', ->
+    scope = new ast.Scope
+    a = cst "int", "5"
+    b = cst "float", "2.5"
+    op = bin(a, "POW", b)
+    op.type = new Type "float"
+    scope.list.push op
+    assert.equal gen(scope), "(5 as f32).powf(2.5)"
+    return
+  
+  it '5.5 ** 2.5', ->
+    scope = new ast.Scope
+    a = cst "float", "5.5"
+    b = cst "float", "2.5"
+    op = bin(a, "POW", b)
+    op.type = new Type "float"
+    scope.list.push op
+    assert.equal gen(scope), "(5.5 as f32).powf(2.5)"
+    return
+  
+  it '2 ** true throws', ->
+    scope = new ast.Scope
+    a = cst "int", "2"
+    b = cst "bool", "true"
+    op = bin(a, "POW", b)
+    op.type = new Type "float"
+    scope.list.push op
+    assert.throws(-> gen scope)
+    return
+  
+  it '2.5 ** true throws', ->
+    scope = new ast.Scope
+    a = cst "float", "2.5"
+    b = cst "bool", "true"
+    op = bin(a, "POW", b)
+    op.type = new Type "float"
+    scope.list.push op
+    assert.throws(-> gen scope)
+    return
+  
+  it 'false ** true throws', ->
+    scope = new ast.Scope
+    a = cst "bool", "false"
+    b = cst "bool", "true"
+    op = bin(a, "POW", b)
+    op.type = new Type "float"
+    scope.list.push op
+    assert.throws(-> gen scope)
+    return
+  
   it 'true ^ false', ->
     scope = new ast.Scope
     l = cst "bool", "true"

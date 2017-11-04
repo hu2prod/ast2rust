@@ -7,7 +7,6 @@ module = @
   MUL : '*'
   DIV : '/'
   MOD : '%'
-  POW : '**'
   
   BIT_AND : '&'
   BIT_OR  : '|'
@@ -49,11 +48,27 @@ module = @
   LTE: '<='
 
 @bin_op_name_cb_map =
-  # BOOL_XOR      : (a, b)->"!!(#{a} ^ #{b})"
   ASS_BOOL_AND  : (a, b)->"(#{a} = !!(#{a} & #{b}))"
   ASS_BOOL_OR   : (a, b)->"(#{a} = !!(#{a} | #{b}))"
   ASS_BOOL_XOR  : (a, b)->"(#{a} = !!(#{a} ^ #{b}))"
-  
+
+@pow = (a, b, ta, tb) ->
+  if tb == "int"
+    if ta == "int"
+      "(#{a} as i32).pow(#{b} as u32)"
+    else if ta == "float"
+      "(#{a} as f32).powi(#{b})"
+    else
+      throw new Error "Invalid base type for POW: #{ta}"
+  else if tb == "float"
+    if ta == "int" or ta == "float"
+      "(#{a} as f32).powf(#{b})"
+    else
+      throw new Error "Invalid base type for POW: #{ta}"
+  else
+    throw new Error "Invalid exponent type for POW: #{tb}"
+
+
 @un_op_name_cb_map =
   INC_RET : (a)->"{#{a} += 1; #{a}}"
   RET_INC : (a)->"{let __copy_#{a} = #{a}; #{a} += 1; __copy_#{a}}"
@@ -122,8 +137,9 @@ class @Gen_context
       _b = gen ast.b, ctx
       ta = ast.a.type?.main
       tb = ast.b.type?.main
-      tt = ast.type?.main
-      if tt == "float"
+      if ast.op == "POW"
+        return module.pow _a, _b, ta, tb
+      if ast.type?.main == "float"
         if ta == "int"
           _a += " as f32"
         if tb == "int"
