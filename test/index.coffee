@@ -223,8 +223,10 @@ describe 'index section', ->
     scope = new ast.Scope
     a = cst "int", "2"
     b = cst "float", "2.2"
-    scope.list.push bin(a, "ADD", b)
-    assert.equal gen(scope), "(2 + 2.2)"
+    op = bin(a, "ADD", b)
+    op.type = new Type "float"
+    scope.list.push op
+    assert.equal gen(scope), "(2 as f32 + 2.2)"
     return
   
   it 'true ^ false'#, ->

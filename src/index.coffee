@@ -120,6 +120,14 @@ class @Gen_context
     when "Bin_op"
       _a = gen ast.a, ctx
       _b = gen ast.b, ctx
+      ta = ast.a.type?.main
+      tb = ast.b.type?.main
+      tt = ast.type?.main
+      if tt == "float"
+        if ta == "int"
+          _a += " as f32"
+        if tb == "int"
+          _b += " as f32"
       if op = module.bin_op_name_map[ast.op]
         "(#{_a} #{op} #{_b})"
       else
