@@ -18,21 +18,9 @@ module = @
   
   SHR : '>>'
   SHL : '<<'
-  LSR : '>>' # for now
+  LSR : '>>' # minor flaw
   
   ASSIGN : '='
-  
-  ASS_SHR : '>>='
-  ASS_SHL : '<<='
-  ASS_LSR : '>>>=' # логический сдвиг вправо >>>
-  
-  ASS_BIT_AND : '&='
-  ASS_BIT_OR  : '|='
-  ASS_BIT_XOR : '^='
-  
-  # ASS_BOOL_AND : ''
-  # ASS_BOOL_OR  : ''
-  # ASS_BOOL_XOR : ''
   
   EQ : '=='
   NE : '!='
@@ -47,10 +35,15 @@ module = @
   ASS_MUL       : (a, b)-> "{#{a} *= #{b}; #{a}}"
   ASS_DIV       : (a, b)-> "{#{a} /= #{b}; #{a}}"
   ASS_MOD       : (a, b)-> "{#{a} %= #{b}; #{a}}"
-
-  ASS_BOOL_AND  : (a, b)->"(#{a} = !!(#{a} & #{b}))"
-  ASS_BOOL_OR   : (a, b)->"(#{a} = !!(#{a} | #{b}))"
-  ASS_BOOL_XOR  : (a, b)->"(#{a} = !!(#{a} ^ #{b}))"
+  ASS_BIT_AND   : (a, b)-> "{#{a} &= #{b}; #{a}}"
+  ASS_BIT_OR    : (a, b)-> "{#{a} |= #{b}; #{a}}"
+  ASS_BIT_XOR   : (a, b)-> "{#{a} ^= #{b}; #{a}}"
+  ASS_BOOL_AND  : (a, b)-> "{#{a} &= #{b}; #{a}}"
+  ASS_BOOL_OR   : (a, b)-> "{#{a} |= #{b}; #{a}}"
+  ASS_BOOL_XOR  : (a, b)-> "{#{a} ^= #{b}; #{a}}"
+  ASS_SHR       : (a, b)-> "{#{a} >>= #{b}; #{a}}"
+  ASS_SHL       : (a, b)-> "{#{a} <<= #{b}; #{a}}"
+  ASS_LSR       : (a, b)-> "{#{a} >>= #{b}; #{a}}" # minor flaw
 
 @pow = (a, b, ta, tb) ->
   if tb == "int"

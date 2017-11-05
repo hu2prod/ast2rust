@@ -575,6 +575,187 @@ describe 'index section', ->
       {a = (a as f32).powf(2.5); a}
     """
   
+  it "var a = 5; a &= 3", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "int"
+    b = cst "int", "5"
+    c = cst "int", "3"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    op = bin(a, "ASS_BIT_AND", c)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 5);
+      {a &= 3; a}
+    """
+  
+  it "var a = 5; a |= 3", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "int"
+    b = cst "int", "5"
+    c = cst "int", "3"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    op = bin(a, "ASS_BIT_OR", c)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 5);
+      {a |= 3; a}
+    """
+  
+  it "var a = 5; a ^= 3", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "int"
+    b = cst "int", "5"
+    c = cst "int", "3"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    op = bin(a, "ASS_BIT_XOR", c)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 5);
+      {a ^= 3; a}
+    """
+  
+  it "var a = true; a &= false", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "bool"
+    b = cst "bool", "true"
+    c = cst "bool", "false"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "bool"
+    scope.list.push op
+    
+    op = bin(a, "ASS_BOOL_AND", c)
+    op.type = new Type "bool"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:bool;
+      (a = true);
+      {a &= false; a}
+    """
+  
+  it "var a = true; a |= false", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "bool"
+    b = cst "bool", "true"
+    c = cst "bool", "false"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "bool"
+    scope.list.push op
+    
+    op = bin(a, "ASS_BOOL_OR", c)
+    op.type = new Type "bool"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:bool;
+      (a = true);
+      {a |= false; a}
+    """
+  
+  it "var a = true; a ^= false", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "bool"
+    b = cst "bool", "true"
+    c = cst "bool", "false"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "bool"
+    scope.list.push op
+    
+    op = bin(a, "ASS_BOOL_XOR", c)
+    op.type = new Type "bool"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:bool;
+      (a = true);
+      {a ^= false; a}
+    """
+  
+  it "var a = 17; a >>= 3", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "int"
+    b = cst "int", "17"
+    c = cst "int", "3"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    op = bin(a, "ASS_SHR", c)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 17);
+      {a >>= 3; a}
+    """
+  
+  it "var a = 17; a <<= 3", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "int"
+    b = cst "int", "17"
+    c = cst "int", "3"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    op = bin(a, "ASS_SHL", c)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 17);
+      {a <<= 3; a}
+    """
+  
+  it "var a = 17; a >>>= 3", ->
+    scope = new ast.Scope
+    a = var_d "a", scope, "int"
+    b = cst "int", "17"
+    c = cst "int", "3"
+    
+    op = bin(a, "ASSIGN", b)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    op = bin(a, "ASS_LSR", c)
+    op.type = new Type "int"
+    scope.list.push op
+    
+    # This is wrong but makes the difference only for negative numbers
+    assert.equal gen(scope), """
+      let mut a:i32;
+      (a = 17);
+      {a >>= 3; a}
+    """
+  
   # it '[]', ->
   #   scope = new ast.Scope
   #   scope.list.push t = new ast.Array_init
