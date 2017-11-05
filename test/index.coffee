@@ -756,6 +756,100 @@ describe 'index section', ->
       {a >>= 3; a}
     """
   
+  it '5 >= 5', ->
+    scope = new ast.Scope
+    l = r = cst "int", "5"
+    scope.list.push bin(l, "GTE", r)
+    assert.equal gen(scope), "(5 >= 5)"
+    return
+  
+  it '5.5 <= 5.5', ->
+    scope = new ast.Scope
+    l = r = cst "float", "5.5"
+    scope.list.push bin(l, "LTE", r)
+    assert.equal gen(scope), "(5.5 <= 5.5)"
+    return
+  
+  it 'true == true', ->
+    scope = new ast.Scope
+    l = r = cst "bool", "true"
+    scope.list.push bin(l, "EQ", r)
+    assert.equal gen(scope), "(true == true)"
+    return
+  
+  it 'true != true', ->
+    scope = new ast.Scope
+    l = r = cst "bool", "true"
+    scope.list.push bin(l, "NE", r)
+    assert.equal gen(scope), "(true != true)"
+    return
+  
+  it '"abc" > "abc"', ->
+    scope = new ast.Scope
+    l = r = cst "string", "abc"
+    scope.list.push bin(l, "GT", r)
+    assert.equal gen(scope), '("abc" > "abc")'
+    return
+  
+  it '"abc" < "abc"', ->
+    scope = new ast.Scope
+    l = r = cst "string", "abc"
+    scope.list.push bin(l, "LT", r)
+    assert.equal gen(scope), '("abc" < "abc")'
+    return
+  
+  # EQ NE GT LT GTE LTE support for int/float combinations is under a question for now
+  
+  # it '5 != 5.5', ->
+  #   scope = new ast.Scope
+  #   a = cst "int", "5"
+  #   b = cst "float", "5.5"
+  #   op = bin(a, "NE", b)
+  #   op.type = new Type "float"
+  #   scope.list.push op
+  #   assert.equal gen(scope), "(5 as f32 != 5.5)"
+  #   return
+  
+  # it '5.5 <= 5', ->
+  #   scope = new ast.Scope
+  #   a = cst "float", "5.5"
+  #   b = cst "int", "5"
+  #   op = bin(a, "LTE", b)
+  #   op.type = new Type "float"
+  #   scope.list.push op
+  #   assert.equal gen(scope), "(5.5 <= 5 as f32)"
+  #   return
+  
+  # it '5.5 >= 5.5', ->
+  #   scope = new ast.Scope
+  #   a = cst "float", "5.5"
+  #   b = cst "float", "5.5"
+  #   op = bin(a, "GTE", b)
+  #   op.type = new Type "float"
+  #   scope.list.push op
+  #   assert.equal gen(scope), "(5.5 >= 5.5)"
+  #   return
+  
+  # it '5 < 5.5', ->
+  #   scope = new ast.Scope
+  #   a = cst "int", "5"
+  #   b = cst "float", "5.5"
+  #   op = bin(a, "LT", b)
+  #   op.type = new Type "float"
+  #   scope.list.push op
+  #   assert.equal gen(scope), "((5 as f32) < 5.5)" # Parentheses matter! Won't compile without them
+  #   return
+  
+  # it '5.5 > 5', ->
+  #   scope = new ast.Scope
+  #   a = cst "float", "5.5"
+  #   b = cst "int", "5"
+  #   op = bin(a, "GT", b)
+  #   op.type = new Type "float"
+  #   scope.list.push op
+  #   assert.equal gen(scope), "(5.5 > 5 as f32)"
+  #   return
+  
   # it '[]', ->
   #   scope = new ast.Scope
   #   scope.list.push t = new ast.Array_init
